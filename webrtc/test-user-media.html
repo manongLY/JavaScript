@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        getAudio()
+        function getAudio() {
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+                this.getUserMedia({ audio: false, video: true }); // 调用用户媒体设备，访问摄像头、录音、
+            } else {
+            console.log("你的浏览器不支持访问用户媒体设备");
+            }
+        }
+        function getUserMedia(constrains) {
+            console.log('11');
+            let that = this;
+            if (navigator.mediaDevices.getUserMedia) {
+                // 最新标准API、
+                navigator.mediaDevices.getUserMedia(constrains).then(stream => { that.success(stream); }).catch(err => { that.error(err); });
+            } else if (navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+                // webkit内核浏览器
+                if (navigator.mediaDevices === undefined) {
+                navigator.mediaDevices = {};
+                }
+
+                // 一些浏览器部分支持 mediaDevices。我们不能直接给对象设置 getUserMedia
+                // 因为这样可能会覆盖已有的属性。这里我们只会在没有getUserMedia属性的时候添加它。
+                if (navigator.mediaDevices.getUserMedia === undefined) {
+                navigator.mediaDevices.getUserMedia = function(constraints) {
+
+                    // 首先，如果有getUserMedia的话，就获得它
+                    var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+                    // 一些浏览器根本没实现它 - 那么就返回一个error到promise的reject来保持一个统一的接口
+                    if (!getUserMedia) {
+                    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+                    }
+
+                    // 否则，为老的navigator.getUserMedia方法包裹一个Promise
+                    return new Promise(function(resolve, reject) {
+                    getUserMedia.call(navigator, constraints, resolve, reject);
+                    });
+                }
+                }
+                navigator.mediaDevices.getUserMedia(constrains).then(stream => {
+                that.success(stream);
+                }).catch(err => {
+                that.error(err);
+                });
+            } else if (navigator.getUserMedia) {
+                // 旧版API
+                navigator.getUserMedia(constrains).then(stream => { that.success(stream); }).catch(err => { that.error(err); });
+            }
+        }
+            // 成功的回调函数
+            function success(stream) {
+                console.log("已点击允许,开启成功");
+            }
+            // 异常的回调函数
+            function error(error) {
+                console.log("访问用户媒体设备失败：", error.name, error.message);
+            }
+
+    </script>
+</body>
+</html>

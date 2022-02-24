@@ -147,3 +147,16 @@ plugins: [
   s.parentNode.insertBefore(sm, s);
 })();
 ```
+
+### 使用 eventBus
+```
+this.$eventBus.$on('test',this.test())
+```
+这样写会**自动执行一遍**
+
+需要写成下面这样
+```
+this.$eventBus.$on('test',() =>{
+    this.test()
+})
+```

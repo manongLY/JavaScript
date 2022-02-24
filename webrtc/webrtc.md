@@ -62,6 +62,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(mediaStream=>{
 1. `NotReadableError Could not start audio source`
 打开客户端直播助手，占用着摄像头时，使用 `navigator.mediaDevices.getUserMedia`，就会这个报错。
 应该使用上面的流程使用虚拟流进行视频播放，不可以直接使用摄像头。
+2. `DOMException: Could not start video source`
+项目中播放本地虚拟流失败，具体原因不详。
+通过设置 `audio: false` 解决了。
+
+###### test-user-media.html 
+用来测试本机是否能连接本地摄像头
+
 
 
 # 补充 rtmp、rtsp、flv 协议
