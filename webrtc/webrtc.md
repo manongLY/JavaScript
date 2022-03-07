@@ -65,11 +65,36 @@ navigator.mediaDevices.getUserMedia(constraints).then(mediaStream=>{
 2. `DOMException: Could not start video source`
 项目中播放本地虚拟流失败，具体原因不详。
 通过设置 `audio: false` 解决了。
+3. 与本机开播助手设置的分辨率不一致
+可以在 `navigator.mediaDevices.getUserMedia` 传入想要的分辨率
+```
+const constraints = {
+    audio: false,
+    video: {
+        deviceId: vidoeSource ? {exact: vidoeSource} : undefined,
+        // 设置分辨率
+        width: {exact: 800}, 
+        // 设置分辨率
+        height: {exact: 600}
+    }
+};
+navigator.mediaDevices.getUserMedia(constraints)
+```
 
 ###### test-user-media.html 
 用来测试本机是否能连接本地摄像头
 
-
+##### 摄像头流显示比例不对
+设置video css 
+```
+width: 100% !important;
+object-fit: fill
+```
+然后通过js 修改 video 高度
+```
+let player = document.getElementById("video");
+player.style.cssText = 'height:'+player.offsetWidth * 0.75+'px !important';
+```
 
 # 补充 rtmp、rtsp、flv 协议
 
